@@ -1904,6 +1904,12 @@ namespace Uno.UI.SourceGenerators.XamlGenerator
 							.FirstOrDefault()
 					: null;
 
+				var source = resourcesMember
+					.Objects
+					.FirstOrDefault(o => o.Type.Name == "ResourceDictionary")?
+					.Members
+					.FirstOrDefault(m => m.Member.Name == "Source");
+
 				if (resourcesRoot != null || mergedDictionaries != null)
 				{
 					if (isInInitializer)
@@ -1919,6 +1925,12 @@ namespace Uno.UI.SourceGenerators.XamlGenerator
 					{
 						writer.AppendLineInvariant("}},");
 					}
+				}
+				else if (source != null)
+				{
+					writer.AppendLineInvariant("Resources = ");
+					BuildDictionaryFromSource(writer, source);
+					writer.AppendLineInvariant(isInInitializer ? "," : ";");
 				}
 			}
 		}
@@ -2076,7 +2088,7 @@ namespace Uno.UI.SourceGenerators.XamlGenerator
 
 				if (source != null)
 				{
-					BuildDictionaryFromSource(writer, source, isInInitializer);
+					BuildDictionaryFromSource(writer, source);
 				}
 				else
 				{
@@ -2107,7 +2119,7 @@ namespace Uno.UI.SourceGenerators.XamlGenerator
 		/// <summary>
 		/// Try to create a ResourceDictionary assignment from supplied Source property.
 		/// </summary>
-		private void BuildDictionaryFromSource(IIndentedStringBuilder writer, XamlMemberDefinition sourceDef, bool isInInitializer)
+		private void BuildDictionaryFromSource(IIndentedStringBuilder writer, XamlMemberDefinition sourceDef)
 		{
 			var source = (sourceDef?.Value as string)?.Replace('\\', '/');
 			if (source == null)
