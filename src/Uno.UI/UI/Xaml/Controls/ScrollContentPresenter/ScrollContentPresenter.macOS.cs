@@ -12,6 +12,7 @@ using System.Drawing;
 using AppKit;
 using Uno.UI;
 using Foundation;
+using CoreGraphics;
 
 namespace Windows.UI.Xaml.Controls
 {
@@ -28,6 +29,11 @@ namespace Windows.UI.Xaml.Controls
 			get => Magnification;
 			set => Magnification = value;
 		}
+
+		public NSEdgeInsets ContentInset { get; set; }
+
+		public CGPoint UpperScrollLimit { get; }
+
 		public ScrollMode HorizontalScrollMode { get; set; }
 
 		public ScrollMode VerticalScrollMode { get; set; }
