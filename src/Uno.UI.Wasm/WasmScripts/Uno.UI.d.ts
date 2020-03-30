@@ -440,6 +440,7 @@ declare namespace Uno.UI {
         getBBox(elementId: number): string;
         getBBoxNative(pParams: number, pReturn: number): boolean;
         private getBBoxInternal;
+        setSvgElementRect(pParams: number): boolean;
         /**
             * Use the Html engine to measure the element using specified constraints.
             *
@@ -709,6 +710,14 @@ declare class WindowManagerSetStylesParams {
     Pairs_Length: number;
     Pairs: Array<string>;
     static unmarshal(pData: number): WindowManagerSetStylesParams;
+}
+declare class WindowManagerSetSvgElementRectParams {
+    X: number;
+    Y: number;
+    Width: number;
+    Height: number;
+    HtmlId: number;
+    static unmarshal(pData: number): WindowManagerSetSvgElementRectParams;
 }
 declare class WindowManagerSetXUidParams {
     HtmlId: number;

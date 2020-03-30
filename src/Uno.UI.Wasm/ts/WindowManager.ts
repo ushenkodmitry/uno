@@ -1253,6 +1253,19 @@ namespace Uno.UI {
 			return (<any>this.getView(elementId)).getBBox();
 		}
 
+		public setSvgElementRect(pParams: number): boolean {
+			const params = WindowManagerSetSvgElementRectParams.unmarshal(pParams);
+
+			const element = this.getView(params.HtmlId) as any;
+
+			element.x.baseVal.value = params.X;
+			element.y.baseVal.value = params.Y;
+			element.width.baseVal.value = params.Width;
+			element.height.baseVal.value = params.Height;
+
+			return true;
+		}
+
 		/**
 			* Use the Html engine to measure the element using specified constraints.
 			*
