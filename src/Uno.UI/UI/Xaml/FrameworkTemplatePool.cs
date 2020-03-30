@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if __WASM__
+#define USE_HARD_REFERENCES
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -83,6 +87,10 @@ namespace Windows.UI.Xaml
 		private readonly Stopwatch _watch = new Stopwatch();
 		private readonly Dictionary<FrameworkTemplate, List<TemplateEntry>> _pooledInstances = new Dictionary<FrameworkTemplate, List<TemplateEntry>>(FrameworkTemplate.FrameworkTemplateEqualityComparer.Default);
 
+#if USE_HARD_REFERENCES
+		private readonly HashSet<UIElement> _activeInstances = new HashSet<View>();
+#endif
+
 		/// <summary>
 		/// Determines the duration for which a pooled template stays alive.
 		/// </summary>
@@ -160,7 +168,7 @@ namespace Windows.UI.Xaml
 
 				if (this.Log().IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
 				{
-					this.Log().Debug($"Creating new template, id={GetTemplateDebugId(template)}");
+					this.Log().Debug($"Creating new template, id={GetTemplateDebugId(template)} IsPoolingEnabled:{IsPoolingEnabled}");
 				}
 
 				instance = template.LoadContent();
@@ -187,6 +195,9 @@ namespace Windows.UI.Xaml
 				}
 			}
 
+#if USE_HARD_REFERENCES
+			_activeInstances.Add(instance);
+#endif
 			return instance;
 		}
 
@@ -221,6 +232,10 @@ namespace Windows.UI.Xaml
 				PropagateOnTemplateReused(instance);
 
 				list.Add(new TemplateEntry(_watch.Elapsed, instance as View));
+
+#if USE_HARD_REFERENCES
+				_activeInstances.Remove(instance as View);
+#endif
 
 				if (this.Log().IsEnabled(Microsoft.Extensions.Logging.LogLevel.Debug))
 				{

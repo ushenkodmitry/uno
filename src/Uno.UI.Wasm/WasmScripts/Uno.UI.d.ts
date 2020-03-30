@@ -70,11 +70,9 @@ declare namespace MonoSupport {
      * unmarshaled invocation of javascript from .NET code.
      * */
     class jsCallDispatcher {
-        static registrations: Map<string, any>;
-        static methodMap: {
-            [id: string]: any;
-        };
-        static _isUnoRegistered: boolean;
+        private static registrations;
+        private static methodMap;
+        private static _isUnoRegistered;
         /**
          * Registers a instance for a specified identier
          * @param identifier the scope name
@@ -567,10 +565,6 @@ declare class WindowManagerCreateContentParams {
 declare class WindowManagerDestroyViewParams {
     HtmlId: number;
     static unmarshal(pData: number): WindowManagerDestroyViewParams;
-}
-declare class WindowManageRegisterUIElementReturn {
-    RegistrationId: number;
-    marshal(pData: number): void;
 }
 declare class WindowManagerGetBBoxParams {
     HtmlId: number;

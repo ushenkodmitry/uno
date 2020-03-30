@@ -455,7 +455,7 @@ var Uno;
                     isFocusable: params.IsFocusable,
                     isSvg: params.IsSvg,
                     tagName: params.TagName,
-                    uiElementRegistrationId: params.UIElementRegistrationId
+                    uiElementRegistrationId: params.UIElementRegistrationId,
                 };
                 this.createContentInternal(def);
                 return true;
@@ -494,9 +494,9 @@ var Uno;
             registerUIElement(typeName, isFrameworkElement, classNames) {
                 const registrationId = Object.keys(this.uiElementRegistrations).length;
                 this.uiElementRegistrations[this.handleToString(registrationId)] = {
-                    typeName: typeName,
-                    isFrameworkElement: isFrameworkElement,
                     classNames: classNames,
+                    isFrameworkElement: isFrameworkElement,
+                    typeName: typeName,
                 };
                 return registrationId;
             }
@@ -1798,12 +1798,6 @@ class WindowManagerDestroyViewParams {
             ret.HtmlId = Number(Module.getValue(pData + 0, "*"));
         }
         return ret;
-    }
-}
-/* TSBindingsGenerator Generated code -- this code is regenerated on each build */
-class WindowManageRegisterUIElementReturn {
-    marshal(pData) {
-        Module.setValue(pData + 0, this.RegistrationId, "i32");
     }
 }
 /* TSBindingsGenerator Generated code -- this code is regenerated on each build */

@@ -13,6 +13,7 @@ using Uno.Logging;
 using Uno.UI;
 using Uno.UI.Extensions;
 using Uno.UI.Xaml;
+using Windows.Devices.Enumeration;
 
 namespace Windows.UI.Xaml
 {
@@ -109,6 +110,9 @@ namespace Windows.UI.Xaml
 			{
 				this.Log().Debug($"Collecting UIElement for [{HtmlId}]");
 			}
+
+			// Console.WriteLine($"~{GetType()}({HtmlId}, p:{this.GetParent()})");
+			Cleanup();
 
 			Uno.UI.Xaml.WindowManagerInterop.DestroyView(HtmlId);
 
@@ -437,14 +441,50 @@ namespace Windows.UI.Xaml
 		{
 			foreach (var child in _children)
 			{
+				var childParent = child.GetParent();
+
 				child.SetParent(null);
-				Uno.UI.Xaml.WindowManagerInterop.RemoveView(HtmlId, child.HtmlId);
+
+				if (childParent != null)
+				{
+					Uno.UI.Xaml.WindowManagerInterop.RemoveView(HtmlId, child.HtmlId);
+				}
 
 				OnChildRemoved(child);
 			}
 
 			_children.Clear();
 			InvalidateMeasure();
+		}
+
+		private void Cleanup()
+		{
+			if (this.GetParent() is UIElement originalParent)
+			{
+				originalParent.RemoveChild(this);
+				// Console.WriteLine($"Remove {HtmlId} from {originalParent.HtmlId}");
+			}
+
+			if (this is Windows.UI.Xaml.Controls.Panel panel)
+			{
+				panel.Children.Clear();
+			}
+			else
+			{
+				foreach (var child in _children)
+				{
+					var childParent = child.GetParent();
+
+					child.SetParent(null);
+
+					if (childParent != null)
+					{
+						Uno.UI.Xaml.WindowManagerInterop.RemoveView(HtmlId, child.HtmlId);
+					}
+				}
+
+				_children.Clear();
+			}
 		}
 
 		public bool RemoveChild(UIElement child)
@@ -540,8 +580,9 @@ namespace Windows.UI.Xaml
 
 		internal virtual void ManagedOnLoading()
 		{
-			foreach (var child in _children)
+			for (var i = 0; i < _children.Count; i++)
 			{
+				var child = _children[i];
 				child.ManagedOnLoading();
 			}
 		}
@@ -551,8 +592,9 @@ namespace Windows.UI.Xaml
 			IsLoaded = true;
 			Depth = depth;
 
-			foreach (var child in _children)
+			for (var i = 0; i < _children.Count; i++)
 			{
+				var child = _children[i];
 				child.ManagedOnLoaded(depth + 1);
 			}
 		}
@@ -562,8 +604,9 @@ namespace Windows.UI.Xaml
 			IsLoaded = false;
 			Depth = null;
 
-			foreach (var child in _children)
+			for (var i = 0; i < _children.Count; i++)
 			{
+				var child = _children[i];
 				child.ManagedOnUnloaded();
 			}
 		}
