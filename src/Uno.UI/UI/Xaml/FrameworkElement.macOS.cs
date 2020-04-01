@@ -14,7 +14,6 @@ namespace Windows.UI.Xaml
 {
 	public partial class FrameworkElement
 	{
-		private bool _inLayoutSubviews;
 		private CGSize? _lastAvailableSize;
 		private CGSize _lastMeasure;
 
@@ -28,11 +27,6 @@ namespace Windows.UI.Xaml
 		{
 			set
 			{
-				if (!_inLayoutSubviews)
-				{
-					base.NeedsLayout = value;
-				}
-
 				RequiresMeasure = true;
 				RequiresArrange = true;
 
@@ -43,6 +37,15 @@ namespace Windows.UI.Xaml
 
 				SetSuperviewNeedsLayout();
 			}
+		}
+
+
+		protected internal override void OnInvalidateMeasure()
+		{
+			base.OnInvalidateMeasure();
+
+			RequiresMeasure = true;
+			RequiresArrange = true;
 		}
 
 		/// <summary>
@@ -62,23 +65,32 @@ namespace Windows.UI.Xaml
 			{
 				try
 				{
-					_inLayoutSubviews = true;
+					// _inLayoutSubviews = true;
+					var originalRequiresArrange = RequiresArrange;
+					var originalRequiresMeasure = RequiresMeasure;
 
 					if (RequiresMeasure)
 					{
 						XamlMeasure(Bounds.Size);
 					}
 
-					OnBeforeArrange();
+					if (RequiresArrange)
+					{
+						OnBeforeArrange();
 
-					var size = SizeFromUISize(Bounds.Size);
-					_layouter.Arrange(new Rect(0, 0, size.Width, size.Height));
+						var size = SizeFromUISize(Bounds.Size);
+						_layouter.Arrange(new Rect(0, 0, size.Width, size.Height));
 
-					OnAfterArrange();
+						OnAfterArrange();
+					}
+					else
+					{
+						RequiresArrange = false;
+					}
 				}
 				finally
 				{
-					_inLayoutSubviews = false;
+					//_inLayoutSubviews = false;
 					RequiresArrange = false;
 				}
 			}
@@ -107,7 +119,7 @@ namespace Windows.UI.Xaml
 
 		}
 
-		private CGSize? XamlMeasure(CGSize availableSize)
+		internal CGSize? XamlMeasure(CGSize availableSize)
 		{
 			// If set layout has not been called, we can 
 			// return a previously cached result for the same available size.
@@ -125,10 +137,6 @@ namespace Windows.UI.Xaml
 
 			var result = _layouter.Measure(SizeFromUISize(availableSize));
 
-			result = IFrameworkElementHelper
-				.SizeThatFits(this, result)
-				.ToFoundationSize();
-
 			return result.LogicalToPhysicalPixels();
 		}
 
@@ -136,7 +144,7 @@ namespace Windows.UI.Xaml
 		{
 			try
 			{
-				_inLayoutSubviews = true;
+				//_inLayoutSubviews = true;
 
 				var xamlMeasure = XamlMeasure(size);
 
@@ -151,7 +159,7 @@ namespace Windows.UI.Xaml
 			}
 			finally
 			{
-				_inLayoutSubviews = false;
+				//_inLayoutSubviews = false;
 			}
 		}
 
