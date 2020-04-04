@@ -13,6 +13,7 @@ using Uno.Logging;
 using System.Threading;
 using Uno.UI;
 using Uno.UI.Xaml;
+using Uno;
 using System.Web;
 using System.Collections.Specialized;
 using Uno.Helpers;
@@ -40,6 +41,13 @@ namespace Windows.UI.Xaml
 			CoreDispatcher.Main.RunAsync(CoreDispatcherPriority.Normal, Initialize);
 		}
 
+		[Preserve]
+		public static int DispatchSystemThemeChange()
+		{
+			Windows.UI.Xaml.Application.Current.OnSystemThemeChanged();
+			return 0;
+		}
+
 		static partial void StartPartial(ApplicationInitializationCallback callback)
 		{
 			_startInvoked = true;
@@ -54,6 +62,11 @@ namespace Windows.UI.Xaml
 			);
 
 			callback(new ApplicationInitializationCallbackParams());
+		}
+
+		partial void ObserveSystemThemeChanges()
+		{
+			WebAssemblyRuntime.InvokeJS("Windows.UI.Xaml.Application.observeSystemTheme()");
 		}
 
 
