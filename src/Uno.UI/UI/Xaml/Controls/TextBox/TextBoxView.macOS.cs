@@ -69,6 +69,9 @@ namespace Windows.UI.Xaml.Controls
 			{
 				IsKeyboardHiddenOnEnter = true
 			};
+
+			DrawsBackground = false;
+			Bezeled = false;
 		}
 
 		public override CGSize SizeThatFits(CGSize size)
@@ -82,11 +85,8 @@ namespace Windows.UI.Xaml.Controls
 
 			if (textBox != null)
 			{
-#if __IOS__
-				var newFont = UIFontHelper.TryGetFont((float)textBox.FontSize, textBox.FontWeight, textBox.FontStyle, textBox.FontFamily);
-#elif __MACOS__
 				var newFont = NSFontHelper.TryGetFont((float)textBox.FontSize, textBox.FontWeight, textBox.FontStyle, textBox.FontFamily);
-#endif
+
 				if (newFont != null)
 				{
 					base.Font = newFont;
@@ -136,11 +136,27 @@ namespace Windows.UI.Xaml.Controls
 					this.TextColor = scb.Color;
 				}
 			}
+
+			UpdateCaretColor();
+		}
+
+		private void UpdateCaretColor()
+		{
+			if (CurrentEditor is NSTextView textField && Foreground is SolidColorBrush scb)
+			{
+				textField.InsertionPointColor = scb.Color;
+			}
 		}
 
 		public void RefreshFont()
 		{
 			UpdateFont();
+		}
+
+		public override bool BecomeFirstResponder()
+		{
+			UpdateCaretColor();
+			return base.BecomeFirstResponder();
 		}
 
 		public void InsertText(NSObject insertString)
