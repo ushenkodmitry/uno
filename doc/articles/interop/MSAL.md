@@ -6,7 +6,7 @@ Uno can be used to build applications using authentication. A popular mechanism 
 
 ## Windows - UWP
 
-Simply use the [`Microsoft.Identity.Client`](https://www.nuget.org/packages/Microsoft.Identity.Client/) NuGet package and follow Microsoft documentation.
+Use the [`Microsoft.Identity.Client`](https://www.nuget.org/packages/Microsoft.Identity.Client/) NuGet package and follow Microsoft documentation.
 
 Microsoft documentation: <https://docs.microsoft.com/azure/active-directory/develop/msal-overview>.
 
@@ -48,7 +48,7 @@ Follow Microsoft's documentation: <https://docs.microsoft.com/azure/active-direc
 
 ## WebAssembly
 
-1. Add a reference to [`Uno.Microsoft.Identity.Client`](https://www.nuget.org/packages/Uno.Microsoft.Identity.Client/) Nuget package into the WASM head of your project.
+1. Add a reference to [`Uno.Microsoft.Identity.Client`](https://www.nuget.org/packages/Uno.Microsoft.Identity.Client/) Nuget package into the Wasm head of your project.
 
 2. Add `Microsoft.Identity.Client` to linker exceptions in `LinkerConfig.xml` located at the root of the WASM project:
 
@@ -59,19 +59,19 @@ Follow Microsoft's documentation: <https://docs.microsoft.com/azure/active-direc
    </linker>
    ```
 
-> Important: `Uno.Microsoft.Identity.Client` is a [**FORK** of the MSAL.NET](https://github.com/unoplatform/Uno.Microsoft.Identity.Client) package. It is **not** an integration of the `MSAL.js` library. That means the application will have more control over the authentication process and ported application code from UWP should compile & work.
+> Important: `Uno.Microsoft.Identity.Client` is a [Fork of the MSAL.NET](https://github.com/unoplatform/Uno.Microsoft.Identity.Client) package. It is not an integration of the `MSAL.js` library. The application will have more control over the authentication process and ported application code from UWP should compile & work.
 
-Particularities to WASM:
+Particularities for WASM:
 
-- Because of browser security requirements, the `redirectUri` must be on the same **protocol** (http/https), **hostname** & **port** of your application. The path is not really important and a good practice is to set the callback URI to something static defined in your `wwwroot` folder (could be an empty page). Example:
+- Because of browser security requirements, the `redirectUri` must be on the same **protocol** (http/https), **hostname** & **port** as your application. The path is not particularly important and there's a good practice to set the callback URI to some static content defined in your `wwwroot` folder (could be an empty page). For example:
 
   - Define this *Redirect URI* in Azure AD: `http://localhost:5000/authentication/login-callback.htm` - for local development using the port  `5000` with `http` protocol. (Azure AD accepts non-`https` redirect URIs for localhost to simplify development - `https` will work too).
 
     > Note about the port number: If you're using IISExpress to run your application from VisualStudio, it could be on another port. That's the default port for Kestrel. Make sure to register the right port in Azure AD and provide the right uri at runtime.
     >
-    > Obviously, you'll also need to register your addresses for your other environments and adjust your code to use the right IDs & URIs. The redirect uri MUST ALWAYS be on the same hostname & port or it won't work.
+    > You'll also need to register addresses for the other environments and adjust the code to use the right IDs & URIs. The redirect Uri must always be on the same hostname & port or otherwise it won't work.
 
-  - [OPTIONAL] File in WASM project `wwwroot/authentication/login-callback.htm` with empty content (you could display something like « _Please wait while the authentication process completes_ » for slow browsers).
+  - Optionally, a file in the Wasm project `wwwroot/authentication/login-callback.htm` with empty content (you could display a message like « _Please wait while the authentication process completes_ » for slower browsers).
 
 - Token cache is _in-memory_ for now­. The library is not persisting the token anywhere in the browser yet. The app can save it.
 
