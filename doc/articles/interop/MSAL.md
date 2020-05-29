@@ -44,20 +44,9 @@ Follow Microsoft's documentation: <https://docs.microsoft.com/azure/active-direc
       .Build();
   ```
 
-  
-
 ## WebAssembly
 
-1. Add a reference to [`Uno.Microsoft.Identity.Client`](https://www.nuget.org/packages/Uno.Microsoft.Identity.Client/) Nuget package into the Wasm head of your project.
-
-2. Add `Microsoft.Identity.Client` to linker exceptions in `LinkerConfig.xml` located at the root of the WASM project:
-
-   ```
-   <linker>
-     [...]
-     <assembly fullname="Microsoft.Identity.Client" />
-   </linker>
-   ```
+Add a reference to [`Uno.Microsoft.Identity.Client`](https://www.nuget.org/packages/Uno.Microsoft.Identity.Client/) Nuget package into the Wasm head of your project.
 
 > Important: `Uno.Microsoft.Identity.Client` is a [Fork of the MSAL.NET](https://github.com/unoplatform/Uno.Microsoft.Identity.Client) package. It is not an integration of the `MSAL.js` library. The application will have more control over the authentication process and ported application code from UWP should compile & work.
 
