@@ -1,6 +1,6 @@
 # Azure Authentication with MSAL
 
-Uno can be used to build applications using authentication. A popular mechanism is the Azure Authentication (Azure AD, Azure AD B2C or ADFS) and it can be used directly using the Microsoft Authentication Library for .NET (MSAL.NET) available from NuGet.
+Uno can be used to build applications using authentication. A popular mechanism is Azure Authentication (Azure AD, Azure AD B2C or ADFS) and it can be used directly using the Microsoft Authentication Library for .NET (MSAL.NET) available from NuGet.
 
 > MSAL.NET is the successor of ADAL.NET library which shouldn't be used for new apps. If you are migrating an application to Uno using ADAL.NET, you should first [migrate it to MSAL.NET](https://docs.microsoft.com/azure/active-directory/develop/msal-net-migration).
 
@@ -14,13 +14,13 @@ Quickstart: https://docs.microsoft.com/azure/active-directory/develop/quickstart
 
 ## Android
 
-Simplly follow Microsoft's documentation there:
+Simply follow Microsoft's documentation:
 
 * Official documentation <https://docs.microsoft.com/azure/active-directory/develop/msal-net-xamarin-android-considerations>
 
 * Wiki https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/Xamarin-Android-specifics
 
-* You need to set the _ParentActivityu_ this way in your code:
+* You need to set the _ParentActivity_ this way in your code:
 
   ``` csharp
   _app = PublicClientApplicationBuilder
@@ -32,7 +32,7 @@ Simplly follow Microsoft's documentation there:
 
 ## iOS & macOS
 
-Follow Microsoft's documentation there: <https://docs.microsoft.com/azure/active-directory/develop/msal-net-xamarin-ios-considerations>.
+Follow Microsoft's documentation: <https://docs.microsoft.com/azure/active-directory/develop/msal-net-xamarin-ios-considerations>.
 
 * You need to set the _ParentWindow_ this way in your code:
 
@@ -46,11 +46,11 @@ Follow Microsoft's documentation there: <https://docs.microsoft.com/azure/active
 
   
 
-## WASM
+## WebAssembly
 
 1. Add a reference to [`Uno.Microsoft.Identity.Client`](https://www.nuget.org/packages/Uno.Microsoft.Identity.Client/) Nuget package into the WASM head of your project.
 
-2. Add `Microsoft.Identity.Client` to linker exceptions in the `LinkerConfig.xml` in the root of the WASM project:
+2. Add `Microsoft.Identity.Client` to linker exceptions in `LinkerConfig.xml` located at the root of the WASM project:
 
    ```
    <linker>
@@ -77,11 +77,10 @@ Particularities to WASM:
 
 ## Other things
 
-Follow those DO/NOT in the Wiki:
+Take note of these 'do nots' in the MSAL Wiki:
 
 <https://github.com/AzureAD/microsoft-authentication-library-for-dotnet/wiki/do-not#do-not>
 
-about exceptions...
+Guidance on handling errors and exceptions:
 
 <https://docs.microsoft.com/azure/active-directory/develop/msal-handling-exceptions?tabs=dotnet>
-
